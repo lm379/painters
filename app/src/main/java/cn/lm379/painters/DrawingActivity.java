@@ -1,4 +1,6 @@
 package cn.lm379.painters;
+
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class DrawingActivity extends AppCompatActivity {
 
+    private static final String PREFS_NAME = "DrawingPrefs";
+    private static final String PREF_CURRENT_TEMPLATE = "TemplateIndex";
     private ImageView imageView;
     private Bitmap bitmap;
     private Canvas canvas;
@@ -32,10 +36,17 @@ public class DrawingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
 
+        // 加载保存的模板序号
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        currentTemplate = preferences.getInt(PREF_CURRENT_TEMPLATE, 0);
+
         imageView = findViewById(R.id.imageView);
         saveButton = findViewById(R.id.saveButton);
+        saveButton.setText(R.string.saveButton);
         deleteButton = findViewById(R.id.deleteButton);
+        deleteButton.setText(R.string.deleteButton);
         returnButton = findViewById(R.id.returnButton);
+        returnButton.setText(R.string.returnButton);
         setupButtonListeners();
 
         // 在布局渲染完成后再获取 ImageView 的宽高
@@ -89,6 +100,7 @@ public class DrawingActivity extends AppCompatActivity {
 
 
         Button switchButton = findViewById(R.id.switchButton);
+        switchButton.setText(R.string.switchButton);
         switchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,6 +137,18 @@ public class DrawingActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // 保存当前模板序号
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(PREF_CURRENT_TEMPLATE, currentTemplate);
+        editor.apply();
+    }
+
+
     private void saveDrawing() {
         // 获取存储路径，在外部存储的应用专属目录中保存
         File storageDir = getExternalFilesDir(null);
@@ -133,12 +157,12 @@ public class DrawingActivity extends AppCompatActivity {
 
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);  // 将 Bitmap 压缩成 PNG 格式并保存
-                Toast.makeText(DrawingActivity.this, "绘图已保存", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DrawingActivity.this, R.string.drawingSaved, Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
-                Toast.makeText(DrawingActivity.this, "保存失败: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(DrawingActivity.this, R.string.saveFailed+ ":" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(DrawingActivity.this, "无法访问存储目录", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DrawingActivity.this, R.string.connotAccessStorage, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -146,7 +170,7 @@ public class DrawingActivity extends AppCompatActivity {
     private void deleteDrawing() {
         // 清空当前的绘图内容
         imageView.setImageDrawable(null);
-        Toast.makeText(DrawingActivity.this, "绘图已删除", Toast.LENGTH_SHORT).show();
+        Toast.makeText(DrawingActivity.this, R.string.photoDeleted, Toast.LENGTH_SHORT).show();
     }
 
     // 跳转回图片选择页面（假设是 MainActivity）

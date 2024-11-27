@@ -3,8 +3,8 @@
     <string name="saveButton">Save</string>
     <string name="deleteButton">clear</string>
     <string name="switchButton">Switch Photo</string>
-    <string name="drawingSaved">The Photo Has Been Saves</string>
     <string name="photoDeleted">The Photo Has Been Deleted</string>
+    <string name="drawingSaved">The Photo Has Been Saves</string>
     <string name="saveFailed">Failed to Save The Photo</string>
     <string name="connotAccessStorage">Cannot Access Storage</string>
     <string name="returnButton">Back</string>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">画板</string>
+    <string name="saveButton">保存</string>
+    <string name="deleteButton">清除</string>
+    <string name="switchButton">点击切换图片</string>
+    <string name="drawingSaved">绘图已保存</string>
+    <string name="saveFailed">绘图保存失败</string>
+    <string name="connotAccessStorage">存储访问失败</string>
+    <string name="photoDeleted">绘图删除失败</string>
+    <string name="returnButton">返回</string>
+</resources>

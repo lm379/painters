@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/switchButton"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:text="点击切换图片" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/redButton"
+            android:layout_width="125dp"
+            android:layout_height="25dp"
+            android:background="@android:color/holo_red_light"
+            android:contentDescription="Red Paint"/>
+
+        <ImageButton
+            android:id="@+id/greenButton"
+            android:layout_width="125dp"
+            android:layout_height="25dp"
+            android:background="@android:color/holo_green_light"
+            android:contentDescription="Green Paint"/>
+
+        <ImageButton
+            android:id="@+id/blueButton"
+            android:layout_width="125dp"
+            android:layout_height="25dp"
+            android:background="@android:color/holo_blue_light"
+            android:contentDescription="Blue Paint"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="125dp"
+            android:layout_height="50dp"
+            android:text="保存"
+/>
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="125dp"
+            android:layout_height="50dp"
+            android:text="删除"
+/>
+
+        <Button
+            android:id="@+id/returnButton"
+            android:layout_width="125dp"
+            android:layout_height="50dp"
+            android:text="返回"
+/>
+    </LinearLayout>
+
+</LinearLayout>

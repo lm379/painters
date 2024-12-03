@@ -3,6 +3,7 @@ package cn.lm379.painters;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +17,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.Toast;
 import android.content.Intent;
 import java.io.File;
@@ -25,24 +27,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class DrawingActivity extends AppCompatActivity {
 
-    private static final String PREFS_NAME = "DrawingPrefs";
-    private static final String PREF_CURRENT_TEMPLATE = "TemplateIndex";
+    public static final String PREFS_NAME = "DrawingPrefs";
+    public static final String PREF_CURRENT_TEMPLATE = "TemplateIndex";
     private ImageView imageView;
     private Bitmap bitmap;
     private Canvas canvas;
     private Paint paint;
+    private MediaPlayer mediaPlayer;
     private int currentColor = Color.RED;
     private int currentTemplate = 0;
     private Button saveButton, deleteButton, returnButton, eraserButton;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    private Switch playButton;
+    protected boolean firstRun = true;   // 设定是否是第一次运行
+    private boolean isPlaying = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        currentTemplate = getIntent().getIntExtra("currentTemplate", -1);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
-
-        // 加载保存的模板序号
-        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        currentTemplate = preferences.getInt(PREF_CURRENT_TEMPLATE, 0);
-
         imageView = findViewById(R.id.imageView);
         saveButton = findViewById(R.id.saveButton);
         saveButton.setText(R.string.saveButton);
@@ -52,26 +57,40 @@ public class DrawingActivity extends AppCompatActivity {
         returnButton.setText(R.string.returnButton);
         eraserButton = findViewById(R.id.eraserButton);
         eraserButton.setText(R.string.eraserButton);
-        setupButtonListeners();
+        playButton = findViewById(R.id.playButton);
 
-        // 在布局渲染完成后再获取 ImageView 的宽高
-        imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-
-                int imageViewWidth = imageView.getWidth();
-                int imageViewHeight = imageView.getHeight();
-
-                if (imageViewWidth > 0 && imageViewHeight > 0) {
-                    // 只初始化一次 Bitmap 和 Canvas
-                    initializeBitmap(imageViewWidth, imageViewHeight);
-                    // 移除监听器，避免重复初始化
-                    imageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                }
-
-                return true;
+        mediaPlayer = MediaPlayer.create(this, R.raw.bgm);
+        playButton.setChecked(true);
+        playMusic();
+        playButton.setOnClickListener(v -> {
+            if (isPlaying) {
+                pauseMusic();
+            } else {
+                playMusic();
             }
         });
+        setupButtonListeners();
+
+        if (currentTemplate != -1) {
+            // 在布局渲染完成后再获取 ImageView 的宽高
+            imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+
+                    int imageViewWidth = imageView.getWidth();
+                    int imageViewHeight = imageView.getHeight();
+
+                    if (imageViewWidth > 0 && imageViewHeight > 0) {
+                        // 只初始化一次 Bitmap 和 Canvas
+                        initializeBitmap(imageViewWidth, imageViewHeight);
+                        // 移除监听器，避免重复初始化
+                        imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    }
+
+                    return true;
+                }
+            });
+        }
 
         // 设置颜色选择按钮的监听器
         RadioButton redButton = findViewById(R.id.redButton);
@@ -153,13 +172,12 @@ public class DrawingActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        // 保存当前模板序号
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(PREF_CURRENT_TEMPLATE, currentTemplate);
+        editor.putBoolean("firstRun", firstRun);
         editor.apply();
     }
-
 
     private void saveDrawing() {
         // 获取存储路径，在外部存储的应用专属目录中保存
@@ -178,11 +196,9 @@ public class DrawingActivity extends AppCompatActivity {
         }
     }
 
-    // 删除绘图的功能（此处为示例逻辑）
+    // 删除绘图的功能
     private void deleteDrawing() {
         // 清空当前的绘图内容
-        // imageView.setImageDrawable(null);
-
         Paint paint =new Paint();
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         canvas.drawPaint(paint);
@@ -193,6 +209,7 @@ public class DrawingActivity extends AppCompatActivity {
 
     // 跳转回图片选择页面
     private void returnToImageSelection() {
+        firstRun = false;   // 设置为非第一次运行
         Intent intent = new Intent(DrawingActivity.this, MainActivity.class);
         startActivity(intent);
         finish();  // 如果不希望回到绘图页面，可以调用 finish() 来销毁当前活动
@@ -203,12 +220,27 @@ public class DrawingActivity extends AppCompatActivity {
         paint.setStrokeWidth(30);
     }
 
+    private void playMusic() {
+        if (mediaPlayer != null) {
+            mediaPlayer.start(); // 开始播放
+            playButton.setText(R.string.play); // 切换按钮图标为暂停图标
+            isPlaying = true; // 更新状态
+        }
+    }
+
+    private void pauseMusic() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause(); // 暂停播放
+            playButton.setText(R.string.pause); // 切换按钮图标为播放图标
+            isPlaying = false; // 更新状态
+        }
+    }
+
     @SuppressLint({"UseCompatLoadingForDrawables", "ClickableViewAccessibility"})
     private void initializeBitmap(int width, int height) {
         // 创建一个与 ImageView 大小相同的 Bitmap 和 Canvas
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
-
 
         // 根据当前模板加载不同的图片
         BitmapDrawable drawable;
@@ -271,4 +303,6 @@ public class DrawingActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

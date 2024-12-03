@@ -1,6 +1,7 @@
 package cn.lm379.painters;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.GridView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,16 +22,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         gridView = findViewById(R.id.gridView);
+        // 从 SharedPreferences 中获取当前模板
+        SharedPreferences preferences = getSharedPreferences(DrawingActivity.PREFS_NAME, 0);
+        int currentTemplate = preferences.getInt(DrawingActivity.PREF_CURRENT_TEMPLATE, 0);
+        boolean firstRun = preferences.getBoolean("firstRun", true);
 
-        // 自定义GridView适配器来显示图片
         ImageAdapter adapter = new ImageAdapter(this, imageResources);
+        Intent intent = new Intent(MainActivity.this, DrawingActivity.class);
         gridView.setAdapter(adapter);
-
-        gridView.setOnItemClickListener((parent, view, position, id) -> {
-            // 点击图片时，进入涂鸦页面
-            Intent intent = new Intent(MainActivity.this, DrawingActivity.class);
-            intent.putExtra("imageResource", imageResources[position]);
+        if (firstRun && currentTemplate != -1) {
+            // 如果当前模板不是 -1，且是第一次运行，则直接进入涂鸦页面
+            intent.putExtra("currentTemplate", currentTemplate);
+            intent.putExtra("imageResource", imageResources[currentTemplate]);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("firstRun", false);
+            editor.apply();
             startActivity(intent);
-        });
+            finish();
+        } else {
+            // 自定义GridView适配器来显示图片
+            gridView.setOnItemClickListener((parent, view, position, id) -> {
+                // 点击图片时，进入涂鸦页面
+                intent.putExtra("currentTemplate", position);
+                intent.putExtra("imageResource", imageResources[position]);
+                startActivity(intent);
+            });
+        }
     }
 }

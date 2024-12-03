@@ -16,60 +16,127 @@
         android:layout_height="45dp"
         android:text="点击切换图片" />
 
+<!--    <LinearLayout-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:gravity="center">-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/redButton"-->
+<!--            android:layout_width="125dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:background="@android:color/holo_red_light"-->
+<!--            android:contentDescription="Red Paint"/>-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/greenButton"-->
+<!--            android:layout_width="125dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:background="@android:color/holo_green_light"-->
+<!--            android:contentDescription="Green Paint"/>-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/blueButton"-->
+<!--            android:layout_width="125dp"-->
+<!--            android:layout_height="25dp"-->
+<!--            android:background="@android:color/holo_blue_light"-->
+<!--            android:contentDescription="Blue Paint"/>-->
+<!--    </LinearLayout>-->
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/redButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="红色"
+            android:textColor="#FF1400" />
+
+        <RadioButton
+            android:id="@+id/greenButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="绿色"
+            android:textColor="#02FD07" />
+
+        <RadioButton
+            android:id="@+id/blueButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="蓝色"
+            android:textColor="#0454F8" />
+
+        <RadioButton
+            android:id="@+id/blackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="黑色"
+            android:textColor="#000000" />
+
+        <RadioButton
+            android:id="@+id/yellowButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="黄色"
+            android:textColor="#F8F004" />
+
+        <RadioButton
+            android:id="@+id/purpleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:text="紫色"
+            android:textColor="#F803E8" />
+    </RadioGroup>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <ImageButton
-            android:id="@+id/redButton"
-            android:layout_width="125dp"
-            android:layout_height="25dp"
-            android:background="@android:color/holo_red_light"
-            android:contentDescription="Red Paint"/>
-
-        <ImageButton
-            android:id="@+id/greenButton"
-            android:layout_width="125dp"
-            android:layout_height="25dp"
-            android:background="@android:color/holo_green_light"
-            android:contentDescription="Green Paint"/>
-
-        <ImageButton
-            android:id="@+id/blueButton"
-            android:layout_width="125dp"
-            android:layout_height="25dp"
-            android:background="@android:color/holo_blue_light"
-            android:contentDescription="Blue Paint"/>
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
         android:gravity="center"
         android:layout_marginTop="20dp">
 
         <Button
             android:id="@+id/saveButton"
-            android:layout_width="125dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#047EFD"
             android:text="保存"
-/>
+            android:layout_marginRight="10dp"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/eraserButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#047EFD"
+            android:layout_marginRight="10dp"
+            android:text="擦除"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/deleteButton"
-            android:layout_width="125dp"
-            android:layout_height="50dp"
-            android:text="删除"
-/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#047EFD"
+            android:layout_marginRight="10dp"
+            android:textColor="#FFFFFF"
+            android:text="删除" />
 
         <Button
             android:id="@+id/returnButton"
-            android:layout_width="125dp"
-            android:layout_height="50dp"
-            android:text="返回"
-/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#047EFD"
+            android:textColor="#FFFFFF"
+            android:text="返回" />
     </LinearLayout>
 
 </LinearLayout>

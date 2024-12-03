@@ -8,4 +8,11 @@
     <string name="connotAccessStorage">存储访问失败</string>
     <string name="photoDeleted">绘图删除失败</string>
     <string name="returnButton">返回</string>
+    <string name="redButton">红色</string>
+    <string name="greenButton">绿色</string>
+    <string name="blueButton">蓝色</string>
+    <string name="yellowButton">黄色</string>
+    <string name="blackButton">黑色</string>
+    <string name="purpleButton">紫色</string>
+    <string name="eraserButton">擦除</string>
 </resources>

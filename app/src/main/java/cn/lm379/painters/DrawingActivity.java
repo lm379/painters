@@ -1,18 +1,21 @@
 package cn.lm379.painters;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 import android.content.Intent;
 import java.io.File;
@@ -28,9 +31,9 @@ public class DrawingActivity extends AppCompatActivity {
     private Bitmap bitmap;
     private Canvas canvas;
     private Paint paint;
-    private int currentColor = Color.BLACK;
+    private int currentColor = Color.RED;
     private int currentTemplate = 0;
-    private Button saveButton, deleteButton, returnButton;
+    private Button saveButton, deleteButton, returnButton, eraserButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +50,8 @@ public class DrawingActivity extends AppCompatActivity {
         deleteButton.setText(R.string.deleteButton);
         returnButton = findViewById(R.id.returnButton);
         returnButton.setText(R.string.returnButton);
+        eraserButton = findViewById(R.id.eraserButton);
+        eraserButton.setText(R.string.eraserButton);
         setupButtonListeners();
 
         // 在布局渲染完成后再获取 ImageView 的宽高
@@ -68,74 +73,81 @@ public class DrawingActivity extends AppCompatActivity {
             }
         });
 
+        // 设置颜色选择按钮的监听器
+        RadioButton redButton = findViewById(R.id.redButton);
+        redButton.setText(R.string.redButton);
+        redButton.setOnClickListener(v -> {
+            paint.setColor(Color.RED);
+            currentColor = Color.RED;
+        });
+        // 默认选中红色按钮
+        redButton.setChecked(true);
 
-        ImageButton redButton = findViewById(R.id.redButton);
-        redButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paint.setColor(Color.RED);
-                currentColor = Color.RED;
-            }
+        RadioButton greenButton = findViewById(R.id.greenButton);
+        greenButton.setText(R.string.greenButton);
+        greenButton.setOnClickListener(v -> {
+            paint.setColor(Color.GREEN);
+            currentColor = Color.GREEN;
         });
 
-
-        ImageButton greenButton = findViewById(R.id.greenButton);
-        greenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paint.setColor(Color.GREEN);
-                currentColor = Color.GREEN;
-            }
+        RadioButton blueButton = findViewById(R.id.blueButton);
+        blueButton.setText(R.string.blueButton);
+        blueButton.setOnClickListener(v -> {
+            paint.setColor(Color.BLUE);
+            currentColor = Color.BLUE;
         });
 
-
-        ImageButton blueButton = findViewById(R.id.blueButton);
-        blueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paint.setColor(Color.BLUE);
-                currentColor = Color.BLUE;
-            }
+        RadioButton yellowButton = findViewById(R.id.yellowButton);
+        yellowButton.setText(R.string.yellowButton);
+        yellowButton.setOnClickListener(v -> {
+            paint.setColor(Color.YELLOW);
+            currentColor = Color.YELLOW;
         });
 
+        RadioButton purpleButton = findViewById(R.id.purpleButton);
+        purpleButton.setText(R.string.purpleButton);
+        purpleButton.setOnClickListener(v -> {
+            paint.setColor(Color.MAGENTA);
+            currentColor = Color.MAGENTA;
+        });
+
+        RadioButton blackButton = findViewById(R.id.blackButton);
+        blackButton.setText(R.string.blackButton);
+        blackButton.setOnClickListener(v -> {
+            paint.setColor(Color.BLACK);
+            currentColor = Color.BLACK;
+        });
 
         Button switchButton = findViewById(R.id.switchButton);
         switchButton.setText(R.string.switchButton);
-        switchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentTemplate = (currentTemplate + 1) % 4;
-                initializeBitmap(imageView.getWidth(), imageView.getHeight());
-            }
+        switchButton.setOnClickListener(v -> {
+            currentTemplate = (currentTemplate + 1) % 4;
+            initializeBitmap(imageView.getWidth(), imageView.getHeight());
         });
     }
 
     private void setupButtonListeners() {
         // 保存按钮
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 处理保存逻辑（此处为示例）
-                saveDrawing();
-            }
+        saveButton.setOnClickListener(v -> {
+            // 处理保存逻辑（此处为示例）
+            saveDrawing();
         });
 
         // 删除按钮
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 处理删除逻辑（此处为示例）
-                deleteDrawing();
-            }
+        deleteButton.setOnClickListener(v -> {
+            // 处理删除逻辑（此处为示例）
+            deleteDrawing();
         });
 
         // 返回按钮，跳转回图片选择页面
-        returnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                returnToImageSelection();
-            }
+        returnButton.setOnClickListener(v -> returnToImageSelection());
+
+        // 擦除按钮
+        eraserButton.setOnClickListener(v -> {
+            // 处理擦除逻辑
+            eraserDrawing();
         });
+
     }
 
     @Override
@@ -169,22 +181,29 @@ public class DrawingActivity extends AppCompatActivity {
     // 删除绘图的功能（此处为示例逻辑）
     private void deleteDrawing() {
         // 清空当前的绘图内容
-        imageView.setImageDrawable(null);
+        // imageView.setImageDrawable(null);
+
+        Paint paint =new Paint();
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        canvas.drawPaint(paint);
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC));
+        imageView.invalidate(); //显示到布局文件中的ImageView控件上
         Toast.makeText(DrawingActivity.this, R.string.photoDeleted, Toast.LENGTH_SHORT).show();
     }
 
-    // 跳转回图片选择页面（假设是 MainActivity）
+    // 跳转回图片选择页面
     private void returnToImageSelection() {
         Intent intent = new Intent(DrawingActivity.this, MainActivity.class);
         startActivity(intent);
         finish();  // 如果不希望回到绘图页面，可以调用 finish() 来销毁当前活动
     }
 
+    private void eraserDrawing() {
+        paint.setColor(Color.rgb(250,250,250));
+        paint.setStrokeWidth(30);
+    }
 
-
-
-
-
+    @SuppressLint({"UseCompatLoadingForDrawables", "ClickableViewAccessibility"})
     private void initializeBitmap(int width, int height) {
         // 创建一个与 ImageView 大小相同的 Bitmap 和 Canvas
         bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -246,8 +265,6 @@ public class DrawingActivity extends AppCompatActivity {
                         // 更新 ImageView 显示的 Bitmap
                         imageView.setImageBitmap(bitmap); // 这里重新设置图片来刷新界面
                         imageView.invalidate(); // 刷新 ImageView，确保显示更新
-
-
                         break;
                 }
                 return true;

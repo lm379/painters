@@ -10,8 +10,8 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter {
 
-    private Context context;
-    private int[] imageResources;
+    private final Context context;
+    private final int[] imageResources;
 
     public ImageAdapter(Context context, int[] imageResources) {
         this.context = context;

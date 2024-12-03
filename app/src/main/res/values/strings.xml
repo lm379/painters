@@ -8,4 +8,11 @@
     <string name="saveFailed">Failed to Save The Photo</string>
     <string name="connotAccessStorage">Cannot Access Storage</string>
     <string name="returnButton">Back</string>
+    <string name="redButton">Red</string>
+    <string name="purpleButton">purple</string>
+    <string name="greenButton">Green</string>
+    <string name="blueButton">Blue</string>
+    <string name="yellowButton">Yellow</string>
+    <string name="blackButton">Black</string>
+    <string name="eraserButton">Eraser</string>
 </resources>

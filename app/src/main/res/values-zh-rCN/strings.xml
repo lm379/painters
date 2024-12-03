@@ -15,4 +15,7 @@
     <string name="blackButton">黑色</string>
     <string name="purpleButton">紫色</string>
     <string name="eraserButton">擦除</string>
+    <string name="drawing">绘画区域</string>
+    <string name="pause">暂停</string>
+    <string name="play">播放</string>
 </resources>

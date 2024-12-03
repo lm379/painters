@@ -15,4 +15,7 @@
     <string name="yellowButton">Yellow</string>
     <string name="blackButton">Black</string>
     <string name="eraserButton">Eraser</string>
+    <string name="drawing">drawing</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
 </resources>
